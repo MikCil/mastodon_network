@@ -63,6 +63,36 @@ function extractSingleDisciplineColors() {
     return disciplineColorMap;
 }
 
+// Function to hide discipline legend
+function hideDisciplineLegend() {
+    const legend = document.getElementById('discipline-legend');
+    if (legend) {
+        legend.style.display = 'none';
+        
+        // Update button text if it exists
+        const legendToggle = document.getElementById('legend-toggle');
+        if (legendToggle) {
+            legendToggle.textContent = 'Show Discipline Legend';
+        }
+    }
+}
+
+// Function to show discipline legend
+function showDisciplineLegend() {
+    let legend = document.getElementById('discipline-legend');
+    if (!legend) {
+        addDisciplineLegend();
+    } else {
+        legend.style.display = 'block';
+    }
+    
+    // Update button text
+    const legendToggle = document.getElementById('legend-toggle');
+    if (legendToggle) {
+        legendToggle.textContent = 'Hide Discipline Legend';
+    }
+}
+
 // Create and add the legend to the page
 function addDisciplineLegend() {
     const disciplineColors = extractSingleDisciplineColors();
@@ -79,11 +109,24 @@ function addDisciplineLegend() {
         legendTitle.textContent = 'Disciplines';
         legendContainer.appendChild(legendTitle);
         
+        // Add close button inside legend
+        const closeButton = document.createElement('div');
+        closeButton.className = 'legend-close-button';
+        closeButton.textContent = '×';
+        closeButton.style.position = 'absolute';
+        closeButton.style.top = '5px';
+        closeButton.style.right = '10px';
+        closeButton.style.cursor = 'pointer';
+        closeButton.style.fontSize = '20px';
+        closeButton.style.fontWeight = 'bold';
+        closeButton.addEventListener('click', hideDisciplineLegend);
+        legendContainer.appendChild(closeButton);
+        
         // Style the legend container
         Object.assign(legendContainer.style, {
             position: 'absolute',
             top: '60px',
-            right: '20px',
+            left: '20px', // Changed from right to left to avoid info panel overlap
             backgroundColor: 'white',
             padding: '10px',
             border: '1px solid #ccc',
@@ -130,6 +173,8 @@ function addDisciplineLegend() {
         
         // Add to page
         document.body.appendChild(legendContainer);
+    } else {
+        legendContainer.style.display = 'block';
     }
 }
 
@@ -206,9 +251,6 @@ function initSigma(config) {
         });
 
         a.draw();
-        
-        // Add discipline legend after drawing
-        addDisciplineLegend();
         
         // Output discipline color mapping to console
         outputDisciplineColorMap();
@@ -322,33 +364,28 @@ function setupGUI(config) {
     config.GP = $GP;
     initSigma(config);
     
-    // Add legend toggle button
+    // Add legend toggle button - positioned at bottom of mainpanel to avoid overlap
     if (config.features.legendToggle !== false) {
         const legendToggle = document.createElement('div');
         legendToggle.id = 'legend-toggle';
         legendToggle.textContent = 'Show Discipline Legend';
-        legendToggle.style.position = 'absolute';
-        legendToggle.style.top = '20px';
-        legendToggle.style.right = '20px';
-        legendToggle.style.padding = '5px 10px';
+        legendToggle.style.position = 'fixed';
+        legendToggle.style.bottom = '20px';
+        legendToggle.style.left = '20px';
+        legendToggle.style.padding = '8px 12px';
         legendToggle.style.backgroundColor = '#f5f5f5';
         legendToggle.style.border = '1px solid #ccc';
         legendToggle.style.borderRadius = '3px';
         legendToggle.style.cursor = 'pointer';
+        legendToggle.style.zIndex = '1001'; // Higher than legend itself
+        legendToggle.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
         
         legendToggle.addEventListener('click', function() {
             const legend = document.getElementById('discipline-legend');
-            if (legend) {
-                if (legend.style.display === 'none') {
-                    legend.style.display = 'block';
-                    legendToggle.textContent = 'Hide Discipline Legend';
-                } else {
-                    legend.style.display = 'none';
-                    legendToggle.textContent = 'Show Discipline Legend';
-                }
+            if (legend && legend.style.display !== 'none') {
+                hideDisciplineLegend();
             } else {
-                addDisciplineLegend();
-                legendToggle.textContent = 'Hide Discipline Legend';
+                showDisciplineLegend();
             }
         });
         
@@ -627,6 +664,8 @@ function nodeNormal() {
 }
 
 function nodeActive(a) {
+    // Hide the discipline legend when a node is activated
+    hideDisciplineLegend();
 
     var groupByDirection = false;
     if (config.informationPanel.groupByEdgeDirection && config.informationPanel.groupByEdgeDirection == true) groupByDirection = true;
@@ -783,6 +822,9 @@ function nodeActive(a) {
 }
 
 function showCluster(a) {
+    // Hide the discipline legend when a cluster is shown
+    hideDisciplineLegend();
+    
     var b = sigInst.clusters[a];
     if (b && 0 < b.length) {
         showGroups(!1);
