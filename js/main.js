@@ -44,6 +44,103 @@ Object.size = function(obj) {
     return size;
 };
 
+// Create a function to extract single discipline colors
+function extractSingleDisciplineColors() {
+    const disciplineColorMap = {};
+    
+    sigInst.iterNodes(function(node) {
+        if (node.attr && node.attr.attributes && node.attr.attributes.disciplines) {
+            const discipline = node.attr.attributes.disciplines;
+            
+            // Only process nodes with single disciplines (no pipe character)
+            if (!discipline.includes('|')) {
+                // Store the color for this discipline
+                disciplineColorMap[discipline] = node.color;
+            }
+        }
+    });
+    
+    return disciplineColorMap;
+}
+
+// Create and add the legend to the page
+function addDisciplineLegend() {
+    const disciplineColors = extractSingleDisciplineColors();
+    
+    // Create the legend container if it doesn't exist
+    let legendContainer = document.getElementById('discipline-legend');
+    if (!legendContainer) {
+        legendContainer = document.createElement('div');
+        legendContainer.id = 'discipline-legend';
+        legendContainer.className = 'legend-container';
+        
+        // Add title
+        const legendTitle = document.createElement('h3');
+        legendTitle.textContent = 'Disciplines';
+        legendContainer.appendChild(legendTitle);
+        
+        // Style the legend container
+        Object.assign(legendContainer.style, {
+            position: 'absolute',
+            top: '60px',
+            right: '20px',
+            backgroundColor: 'white',
+            padding: '10px',
+            border: '1px solid #ccc',
+            borderRadius: '5px',
+            maxHeight: '400px',
+            overflowY: 'auto',
+            zIndex: '1000'
+        });
+        
+        // Add the legend items
+        const disciplineList = document.createElement('ul');
+        disciplineList.style.listStyle = 'none';
+        disciplineList.style.padding = '0';
+        disciplineList.style.margin = '0';
+        
+        // Sort disciplines alphabetically
+        const sortedDisciplines = Object.keys(disciplineColors).sort();
+        
+        sortedDisciplines.forEach(discipline => {
+            const color = disciplineColors[discipline];
+            const item = document.createElement('li');
+            item.style.margin = '5px 0';
+            item.style.display = 'flex';
+            item.style.alignItems = 'center';
+            
+            const colorSwatch = document.createElement('span');
+            colorSwatch.style.display = 'inline-block';
+            colorSwatch.style.width = '20px';
+            colorSwatch.style.height = '20px';
+            colorSwatch.style.backgroundColor = color;
+            colorSwatch.style.marginRight = '10px';
+            colorSwatch.style.border = '1px solid #999';
+            colorSwatch.style.borderRadius = '3px';
+            
+            const disciplineName = document.createElement('span');
+            disciplineName.textContent = discipline;
+            
+            item.appendChild(colorSwatch);
+            item.appendChild(disciplineName);
+            disciplineList.appendChild(item);
+        });
+        
+        legendContainer.appendChild(disciplineList);
+        
+        // Add to page
+        document.body.appendChild(legendContainer);
+    }
+}
+
+// Function to output discipline-color mapping to console
+function outputDisciplineColorMap() {
+    const disciplineColors = extractSingleDisciplineColors();
+    console.log("Discipline Color Map:");
+    console.table(disciplineColors);
+    return disciplineColors; // Return for further use if needed
+}
+
 function initSigma(config) {
     var data = config.data
 
@@ -109,6 +206,13 @@ function initSigma(config) {
         });
 
         a.draw();
+        
+        // Add discipline legend after drawing
+        addDisciplineLegend();
+        
+        // Output discipline color mapping to console
+        outputDisciplineColorMap();
+        
         configSigmaElements(config);
     }
 
@@ -217,6 +321,39 @@ function setupGUI(config) {
     $GP.cluster = new Cluster($GP.form.find("#attributeselect"));
     config.GP = $GP;
     initSigma(config);
+    
+    // Add legend toggle button
+    if (config.features.legendToggle !== false) {
+        const legendToggle = document.createElement('div');
+        legendToggle.id = 'legend-toggle';
+        legendToggle.textContent = 'Show Discipline Legend';
+        legendToggle.style.position = 'absolute';
+        legendToggle.style.top = '20px';
+        legendToggle.style.right = '20px';
+        legendToggle.style.padding = '5px 10px';
+        legendToggle.style.backgroundColor = '#f5f5f5';
+        legendToggle.style.border = '1px solid #ccc';
+        legendToggle.style.borderRadius = '3px';
+        legendToggle.style.cursor = 'pointer';
+        
+        legendToggle.addEventListener('click', function() {
+            const legend = document.getElementById('discipline-legend');
+            if (legend) {
+                if (legend.style.display === 'none') {
+                    legend.style.display = 'block';
+                    legendToggle.textContent = 'Hide Discipline Legend';
+                } else {
+                    legend.style.display = 'none';
+                    legendToggle.textContent = 'Show Discipline Legend';
+                }
+            } else {
+                addDisciplineLegend();
+                legendToggle.textContent = 'Hide Discipline Legend';
+            }
+        });
+        
+        document.body.appendChild(legendToggle);
+    }
 }
 
 function configSigmaElements(config) {
