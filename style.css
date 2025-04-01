@@ -1,0 +1,163 @@
+/* Basic Reset & Font */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Lato', sans-serif;
+    /* *** MODIFIED: Added background image properties *** */
+    background-image: url('shin-bijutsukai-0324.jpeg'); /* Your image filename */
+    background-size: cover; /* Cover the entire viewport */
+    background-position: center center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-attachment: fixed; /* Keep background fixed during scroll */
+    /* *** ADDED: Fallback background color if image fails *** */
+    background-color: #f0f2f5;
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Container */
+.container {
+    background-color: rgba(255, 255, 255, 0.95); /* *** MODIFIED: Slightly transparent white for better readability over image *** */
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Header */
+header h1 {
+    font-size: 2em;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+header p {
+    font-size: 1.1em;
+    color: #444; /* Slightly darker text for better contrast */
+    margin-bottom: 30px;
+    font-weight: 300;
+}
+
+/* Network Links Section */
+.network-links h2 {
+    font-size: 1.4em;
+    color: #34495e;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #ddd; /* Slightly darker border */
+    padding-bottom: 10px;
+    font-weight: 400;
+}
+
+/* Buttons (Keep existing styles) */
+.button {
+    display: block;
+    background-color: #3498db;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    font-weight: 400;
+    text-align: left;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add subtle shadow to buttons */
+}
+
+.button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.button-icon {
+    margin-right: 12px;
+    font-size: 1.2em;
+    display: inline-block;
+    vertical-align: middle;
+    width: 25px;
+    text-align: center;
+}
+
+/* WIP Button Styling (Keep existing styles) */
+.button.disabled {
+    background-color: #bdc3c7;
+    color: #7f8c8d;
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.7;
+    box-shadow: none; /* Remove shadow for disabled */
+}
+
+.button.disabled:hover {
+    background-color: #bdc3c7;
+    transform: none;
+    box-shadow: none;
+}
+
+.wip-tag {
+    font-size: 0.8em;
+    font-weight: 700;
+    color: #c0392b; /* Slightly darker red */
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+/* Footer */
+footer {
+    margin-top: 40px;
+    font-size: 0.9em;
+    color: #666; /* Slightly darker grey for footer text */
+}
+
+footer a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* *** ADDED: Style for the image credit *** */
+.image-credit {
+    margin-top: 15px; /* Space above the credit line */
+    font-size: 0.75em; /* Make it smaller */
+    color: #888; /* Lighter grey */
+    font-style: italic;
+}
+
+/* Responsive Adjustments (Keep existing styles) */
+@media (max-width: 600px) {
+    .container {
+        padding: 25px;
+        background-color: rgba(255, 255, 255, 0.98); /* Increase opacity slightly on mobile if needed */
+    }
+
+    header h1 {
+        font-size: 1.8em;
+    }
+
+    header p {
+        font-size: 1em;
+    }
+
+    .button {
+        padding: 12px 15px;
+        font-size: 1em;
+    }
+}
