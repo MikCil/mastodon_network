@@ -1,5 +1,5 @@
 # Academic Currents in the Fediverse: A network analysis of scholarly communities on Mastodon 
-Interactive network visualizations for mapping the "Mastodon ScholarSphere"
+Interactive network visualizations for mapping the "Mastodon ScholarSphere".
 
 [![GitHub Pages](https://img.shields.io/badge/View%20Live-Visualizations-brightgreen?style=flat-square)](https://mikcil.github.io/mastodon_scholarsphere/)
 
